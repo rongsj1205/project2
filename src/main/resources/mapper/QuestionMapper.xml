@@ -5,12 +5,19 @@
 
 <mapper namespace="com.example.project2.mapper.QuestionMapper">
     <insert id="insertQuestionMessage" parameterType="QuestionMessage">
-        insert into questionMessage(questionName,questionType,questionAnswer,questionLink)
-        values (#{questionName},#{questionType},#{questionAnswer},#{questionLink})
+        insert into questionMessage(questionName, questionType, questionAnswer, questionLink)
+        values (#{questionName}, #{questionType}, #{questionAnswer}, #{questionLink})
     </insert>
 
     <select id="queryQuestionMessage" resultType="QuestionMessage">
-        select * from questionMessage
+        select *
+        from questionMessage
+    </select>
+
+    <select id="queryQuestionType" resultType="QuestionMessage">
+        select *
+        from questionMessage
+        where questionType = #{questionType}
     </select>
 
 </mapper>

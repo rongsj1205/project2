@@ -17,4 +17,5 @@ public class QuestionMessage {
     private String questionType;
     private String questionAnswer;
     private String questionLink;
+
 }

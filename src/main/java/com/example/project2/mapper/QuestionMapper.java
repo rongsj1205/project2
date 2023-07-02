@@ -11,5 +11,7 @@ public interface QuestionMapper {
     int insertQuestionMessage(QuestionMessage questionMessage);
 
     List<QuestionMessage> queryQuestionMessage();
+    List<QuestionMessage> queryQuestionType(String queryQuestionType);
+
 
 }

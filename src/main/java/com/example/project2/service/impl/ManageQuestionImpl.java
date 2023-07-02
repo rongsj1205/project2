@@ -58,6 +58,12 @@ public class ManageQuestionImpl implements ManageQuestionService {
         return questionMessages;
     }
 
+    @Override
+    public List<QuestionMessage> queryQuestionType(String queryQuestionType) {
+        List<QuestionMessage> questionMessages = questionMapper.queryQuestionType(queryQuestionType);
+        return questionMessages;
+    }
+
 
     private boolean checkRepeatQuestion(String questionName) {
         //PageHelper.startPage(1, 5);
