@@ -3,6 +3,7 @@ package com.example.project2.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.project2.service.AsyncServer;
+import com.example.project2.service.ManageQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +24,9 @@ public class AsyncController {
     @Autowired
     private AsyncServer asyncServer;
 
+    @Autowired
+    private ManageQuestionService manageQuestionService;
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @ResponseBody
     public JSONObject asynctest() throws Exception {
@@ -35,6 +39,13 @@ public class AsyncController {
         long endTime = System.currentTimeMillis();
         jsonObject.put("msg", "成功");
         jsonObject.put("spendtime", endTime - startTime);
+        return jsonObject;
+    }
+
+    @RequestMapping(value = "/test1", method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject asynctest1() throws Exception {
+        JSONObject jsonObject = manageQuestionService.asyncQueryQuestionMessages();
         return jsonObject;
     }
 }

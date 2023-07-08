@@ -1,13 +1,36 @@
 package com.example.project2.service;
 
+import com.example.project2.PO.QuestionMessage;
+import com.example.project2.confirguration.AsyncConfig;
+import com.example.project2.mapper.QuestionMapper;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 
 @Service
 @Slf4j
 public class AsyncServer {
 
+    @Autowired
+    private QuestionMapper questionMapper;
+
+    public static List<QuestionMessage> allList = new ArrayList<>();
+
+    private Lock lock = new ReentrantLock();
+
+    @Autowired
+    private AsyncConfig asyncConfig;
 
     /*    @Async("async")注解是Spring框架中的一个注解，用于标识一个方法是异步方法。通过在方法上添加@Async注解，并指定一个线程池的名称，可以告诉Spring框架将该方法作为一个异步方法进行处理。
          @Async("async")注解的作用包括：
@@ -20,4 +43,48 @@ public class AsyncServer {
         Thread.sleep(2000);
         log.info("线程：" + Thread.currentThread().getName() + "执行异步任务：" + counter);
     }
+
+    @Async
+    public List<QuestionMessage> asyncQueryAllQuestionMessage(int fromIndex, int toIndex, CountDownLatch countDownLatch) {
+        lock.lock();
+        List<QuestionMessage> questionMessages = null;
+        String currentThreadName = Thread.currentThread().getName();
+        try {
+
+            log.info("当前线程名称为：" + currentThreadName + "首节点：" + fromIndex + "尾节点：" + toIndex);
+            questionMessages = questionMapper.queryQuestionMessageById(fromIndex, toIndex);
+            for (int i = 0; i < questionMessages.size(); i++) {
+                QuestionMessage questionMessage = questionMessages.get(i);
+                allList.add(i, questionMessage);
+            }
+
+            return questionMessages;
+        } catch (Exception e) {
+            log.info("线程为：" + currentThreadName + "的报错信息：" + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            countDownLatch.countDown();
+            lock.unlock();
+            return questionMessages;
+        }
+
+    }
+
+    public static <T> List<List<T>> pagingList(List<T> resList, int pageSize) {
+        //判断是否为空
+        if (CollectionUtils.isEmpty(resList) || pageSize <= 0) {
+            return Lists.newArrayList();
+        }
+        int length = resList.size();
+        int num = (length + pageSize - 1) / pageSize;
+        List<List<T>> newList = new ArrayList<>();
+        for (int i = 0; i < num; i++) {
+            int fromIndex = i * pageSize;
+            int toIndex = (i + 1) * pageSize < length ? (i + 1) * pageSize : length;
+            newList.add(resList.subList(fromIndex, toIndex));
+        }
+        return newList;
+    }
+
+
 }

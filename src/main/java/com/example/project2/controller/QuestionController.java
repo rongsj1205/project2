@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.project2.PO.QuestionMessage;
 import com.example.project2.service.ManageQuestionService;
 import com.mysql.cj.util.StringUtils;
-import com.mysql.cj.xdevapi.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,12 +52,15 @@ public class QuestionController {
         JSONArray resultArray = new JSONArray();
         List<QuestionMessage> questionMessages = null;
         if (!StringUtils.isNullOrEmpty(inputAnswerType)) {
-            questionMessages = manageQuestion.queryQuestionType(inputAnswerType);
+            questionMessages = manageQuestion.queryQuestionMessageByType(inputAnswerType);
             for (QuestionMessage quest : questionMessages) {
                 JSONObject resultQuestion = new JSONObject();
                 String questionName = quest.getQuestionName();
                 String questionAnswer = quest.getQuestionAnswer();
                 String questionType = quest.getQuestionType();
+                if (StringUtils.isNullOrEmpty(questionAnswer)) {
+                    questionAnswer = "该问题没有答案";
+                }
                 resultQuestion.put("resultQuestionName", questionName);
                 resultQuestion.put("resultQuestionAnswer", questionAnswer);
                 resultQuestion.put("questionType", questionType);

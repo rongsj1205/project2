@@ -8,5 +8,6 @@ import java.util.List;
 public interface ManageQuestionService {
     boolean insertQuestionMessage(JSONObject jsonObject);
     List<QuestionMessage> queryQuestionMessage();
-    List<QuestionMessage> queryQuestionType(String queryQuestionType);
+    List<QuestionMessage> queryQuestionMessageByType(String queryQuestionType);
+    JSONObject asyncQueryQuestionMessages();
 }

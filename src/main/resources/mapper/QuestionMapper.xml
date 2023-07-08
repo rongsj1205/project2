@@ -14,10 +14,19 @@
         from questionMessage
     </select>
 
-    <select id="queryQuestionType" resultType="QuestionMessage">
+    <select id="queryQuestionMessageById" resultType="QuestionMessage">
+        select *
+        from questionMessage where id between #{fromId} and #{toId}
+    </select>
+
+    <select id="queryQuestionMessageByType" resultType="QuestionMessage">
         select *
         from questionMessage
         where questionType = #{questionType}
+    </select>
+    <select id="queryQuestionCounts" resultType="Integer">
+        select count(id)
+        from questionMessage
     </select>
 
 </mapper>
