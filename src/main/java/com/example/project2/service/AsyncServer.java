@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -14,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -84,6 +86,13 @@ public class AsyncServer {
             newList.add(resList.subList(fromIndex, toIndex));
         }
         return newList;
+    }
+
+    @Async
+    public Future<List<QuestionMessage>> getAttendCountSubList(int fromIndex, int toIndex)  {
+        List<QuestionMessage> subAttendList = questionMapper.queryQuestionMessageById(fromIndex, toIndex);
+        log.info("完成任务");
+        return new AsyncResult<>(subAttendList);
     }
 
 

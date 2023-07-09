@@ -15,8 +15,9 @@
     </select>
 
     <select id="queryQuestionMessageById" resultType="QuestionMessage">
-        select *
-        from questionMessage where id between #{fromId} and #{toId}
+        select id, questionName, questionType, questionAnswer, questionLink
+        from questionMessage
+        where id between #{fromId} and #{toId}
     </select>
 
     <select id="queryQuestionMessageByType" resultType="QuestionMessage">

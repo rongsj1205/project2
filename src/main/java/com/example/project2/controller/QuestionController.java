@@ -115,4 +115,57 @@ public class QuestionController {
         jsonObject.put("resultQuestions", resultArray);
         return jsonObject;
     }
+
+    @RequestMapping("/query2")
+    @ResponseBody
+    @CrossOrigin
+    public JSONObject query2(@RequestBody JSONObject jsonObject) {
+        String inputQuestion = jsonObject.getString("inputQuestion");
+        String inputAnswerType = jsonObject.getString("inputAnswerType");
+        jsonObject.clear();
+        jsonObject.put("resultType", "1");
+        JSONArray resultArray = new JSONArray();
+        List<QuestionMessage> questionMessages = manageQuestion.getQuestionMessages(10);
+        for (QuestionMessage quest : questionMessages) {
+            JSONObject resultQuestion = new JSONObject();
+            String questionType = quest.getQuestionType();
+            String questionName = quest.getQuestionName();
+            String questionAnswer = quest.getQuestionAnswer();
+            resultQuestion.put("resultQuestionName", questionName);
+            resultQuestion.put("questionType", questionType);
+            if (StringUtils.isNullOrEmpty(questionAnswer)) {
+                questionAnswer = "该问题没有答案";
+            }
+            resultQuestion.put("resultQuestionAnswer", questionAnswer);
+            if (!StringUtils.isNullOrEmpty(inputAnswerType) && null != questionType) {
+                if (questionType.contains(inputAnswerType)) {
+                    resultArray.add(resultQuestion);
+                }
+            } else if (StringUtils.isNullOrEmpty(inputQuestion)) {
+                resultArray.add(resultQuestion);
+            } else if (questionName.contains(inputQuestion)) {
+                resultArray.add(resultQuestion);
+                break;
+            }
+        }
+        if (resultArray.size() == 0) {
+            jsonObject.put("resultType", "0");
+            jsonObject.put("resultMessage", "查询结果为空");
+        } else {
+            Set<String> set = new HashSet<>();
+            for (int i = 0; i < resultArray.size(); i++) {
+                String questionType = resultArray.getJSONObject(i).getString("questionType");
+                set.add(questionType);
+            }
+            List questionTypes = new ArrayList();
+            for (String element : set) {
+                questionTypes.add(element);
+            }
+            jsonObject.put("questionTypes", questionTypes);
+        }
+
+        jsonObject.put("resultQuestions", resultArray);
+        return jsonObject;
+    }
+
 }
