@@ -219,7 +219,8 @@ public class ManageQuestionImpl implements ManageQuestionService {
     }
 
     /**
-     *不会出现数据丢失的高效查询方法
+     * 不会出现数据丢失的高效查询方法
+     *
      * @param pageSize
      * @return
      */

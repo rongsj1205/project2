@@ -43,4 +43,12 @@ public class AsyncController {
     }
 
 
+    @RequestMapping(value = "/test1", method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject asynctest1() throws Exception {
+        JSONObject jsonObject1 = manageQuestionService.asyncQueryQuestionMessages();
+        return jsonObject1;
+    }
+
+
 }

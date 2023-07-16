@@ -89,11 +89,10 @@ public class AsyncServer {
     }
 
     @Async
-    public Future<List<QuestionMessage>> getAttendCountSubList(int fromIndex, int toIndex)  {
+    public Future<List<QuestionMessage>> getAttendCountSubList(int fromIndex, int toIndex) {
+        String currentThreadName = Thread.currentThread().getName();
+        log.info("当前线程名称为：" + currentThreadName + "首节点：" + fromIndex + "尾节点：" + toIndex);
         List<QuestionMessage> subAttendList = questionMapper.queryQuestionMessageById(fromIndex, toIndex);
-        log.info("完成任务");
         return new AsyncResult<>(subAttendList);
     }
-
-
 }
